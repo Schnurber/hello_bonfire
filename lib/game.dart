@@ -13,18 +13,20 @@ class SimpleChickenGameWidget extends StatelessWidget {
   }
 }
 
-class ChickenTiledWidged extends BonfireTiledWidget {
+class ChickenTiledWidged extends BonfireWidget {
   ChickenTiledWidged({Key? key})
       : super(
           key: key,
-          background: BackgroundColorGame(const Color(0xFF004800)),
-          joystick: JoystickMoveToPosition(),
+          joystick: Joystick(
+            directional: JoystickDirectional(),
+            keyboardConfig: KeyboardConfig(),
+            ),
           cameraConfig: CameraConfig( 
-            sizeMovementWindow: Vector2(100, 100),),
+            movementWindow: Vector2(100, 100),),
            lightingColorGame: Colors.black.withOpacity(0.75),
-          map: TiledWorldMap(
+          map: WorldMapByTiled(
             'tiled/maze.json',
-            forceTileSize: const Size(32, 32),
+            forceTileSize: Vector2.all(32),
             objectsBuilder: {
               'enemy': (properties) => EnemyChicken(properties.position),
               'grain': (properties) => Grain(properties.position),

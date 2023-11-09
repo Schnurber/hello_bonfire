@@ -2,7 +2,7 @@ import 'package:bonfire/bonfire.dart';
 
 const raster = 32.0;
 
-class Grain extends GameDecoration {
+class Grain extends GameDecoration  {
   Grain(Vector2 position)
       : super.withSprite(
             sprite: Sprite.load('grain.png',

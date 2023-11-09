@@ -67,7 +67,7 @@ _reset(BonfireGameInterface gameRef) {
   });
 }
 
-class EnemyChicken extends SimpleEnemy with ObjectCollision {
+class EnemyChicken extends SimpleEnemy with BlockMovementCollision {
   Vector2 initPosition;
 
  @override
@@ -95,7 +95,5 @@ class EnemyChicken extends SimpleEnemy with ObjectCollision {
           position: position,
           life: 200,
         ) {
-    var ca = CollisionArea.rectangle(size: Vector2.all(32),);
-    setupCollision( CollisionConfig(collisions: [ca],),);
   }
 }
