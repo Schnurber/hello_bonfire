@@ -1,7 +1,5 @@
-import 'package:bonfire/base/bonfire_game_interface.dart';
 import 'package:bonfire/bonfire.dart';
-import 'package:flutter/material.dart';
-import 'grain.dart';
+import 'package:hello_bonfire/chicken.dart';
 
 const raster = 32.0;
 
@@ -57,39 +55,48 @@ Future<SpriteAnimation> runDown = SpriteAnimation.load(
 
 
 class EnemyChicken  extends SimpleEnemy {
+
   Vector2 initPosition;
   
  @override
   Future<void> onLoad() {
-    /// Adds rectangle collision
     add(RectangleHitbox(size: size / 2, position: size / 4));
     return super.onLoad();
   }
 
    @override
   void update(double dt) {
-    //moveToPosition(gameRef.player!.position, speed: 2);
+
     seeAndMoveToPlayer(
+      radiusVision: raster * 4,
       closePlayer: (player) {
-         removeFromParent();
+        if (player is Chicken) {
+         player.position = player.initPosition;
+        }
+        gameRef.enemies().forEach((e) {
+          if (e is EnemyChicken) {
+            e.position = e.initPosition;
+          }
+        });
       },
-      radiusVision: raster * 30,
     );
+    
      super.update(dt);
   }
 
   EnemyChicken(Vector2 position)
       : initPosition = position,
         super(
+          position: position,
           animation: SimpleDirectionAnimation(
             idleRight: idleRight,
             runRight: runRight,
             runLeft: runLeft,
             runUp: runUp,
             runDown: runDown,
-            
           ),
           size: Vector2.all(raster),
-          position: position,
+          speed: 90,
+          initDirection: Direction.up,
         );
 }

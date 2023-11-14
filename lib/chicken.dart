@@ -1,6 +1,5 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
-import 'grain.dart';
 
 const raster = 32.0;
 
@@ -54,27 +53,36 @@ Future<SpriteAnimation> runDown = SpriteAnimation.load(
   ),
 );
 
-class Chicken extends SimplePlayer with Sensor, Lighting, BlockMovementCollision {
+class Chicken extends SimplePlayer with Lighting, BlockMovementCollision {
+ Vector2 initPosition;
 
   Chicken(Vector2 position)
-      : super(
-          animation: SimpleDirectionAnimation(
-            idleRight: idleRight,
-            runRight: runRight,
-            runLeft: runLeft,
-            runUp: runUp,
-            runDown: runDown,
-          ),
-          size: Vector2.all(32),
-          position: position,
-        ) {
-    setupLighting(
-            LightingConfig(
-              radius: width * 1.5,
-              blurBorder: width * 1.5,
-              color: Colors.transparent,
-            ),
-          );
+   : initPosition = position,
+    super(
+      animation: SimpleDirectionAnimation(
+        idleRight: idleRight,
+        runRight: runRight,
+        runLeft: runLeft,
+        runUp: runUp,
+        runDown: runDown,
+      ),
+      size: Vector2.all(32),
+      position: position,
+      speed: 100,
+    ) {
+setupLighting(
+        LightingConfig(
+          radius: width * 1.5,
+          blurBorder: width * 1.5,
+          color: Colors.transparent,
+        ),
+      );
   }
 
+   @override
+  Future<void> onLoad() {
+    /// Adds rectangle collision
+    add(RectangleHitbox(size: size / 2, position: size / 4));
+    return super.onLoad();
+  }
 }

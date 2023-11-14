@@ -33,5 +33,6 @@ class ChickenTiledWidged extends BonfireWidget {
             },
           ),
           player: Chicken(Vector2(32, 32)),
+          backgroundColor: const Color(0xff004800),
         );
 }
