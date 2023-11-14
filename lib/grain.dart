@@ -2,7 +2,15 @@ import 'package:bonfire/bonfire.dart';
 
 const raster = 32.0;
 
-class Grain extends GameDecoration  {
+class Grain extends GameDecoration with Sensor<Player> {
+
+    @override
+  void onContact(Player component) {
+    removeFromParent();
+    super.onContact(component);
+  }
+
+
   Grain(Vector2 position)
       : super.withSprite(
             sprite: Sprite.load('grain.png',

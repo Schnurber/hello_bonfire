@@ -1,5 +1,6 @@
 import 'package:bonfire/base/bonfire_game_interface.dart';
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/material.dart';
 import 'grain.dart';
 
 const raster = 32.0;
@@ -54,33 +55,29 @@ Future<SpriteAnimation> runDown = SpriteAnimation.load(
   ),
 );
 
-_reset(BonfireGameInterface gameRef) {
-  gameRef.enemies().forEach((element) {
-    var en = element as EnemyChicken;
-    en.position = en.initPosition;
-  });
-  gameRef.decorations().forEach((element) {
-    if (element is Grain) {
-      element.opacity = 1.0;
 
-    }
-  });
-}
-
-class EnemyChicken extends SimpleEnemy with BlockMovementCollision {
+class EnemyChicken  extends SimpleEnemy {
   Vector2 initPosition;
-
+  
  @override
+  Future<void> onLoad() {
+    /// Adds rectangle collision
+    add(RectangleHitbox(size: size / 2, position: size / 4));
+    return super.onLoad();
+  }
+
+   @override
   void update(double dt) {
+    //moveToPosition(gameRef.player!.position, speed: 2);
     seeAndMoveToPlayer(
       closePlayer: (player) {
-        player.position = Vector2(raster, raster);
-      _reset(gameRef);
+         removeFromParent();
       },
-      radiusVision: 64,
+      radiusVision: raster * 30,
     );
-    super.update(dt);
+     super.update(dt);
   }
+
   EnemyChicken(Vector2 position)
       : initPosition = position,
         super(
@@ -90,10 +87,9 @@ class EnemyChicken extends SimpleEnemy with BlockMovementCollision {
             runLeft: runLeft,
             runUp: runUp,
             runDown: runDown,
+            
           ),
-          size: Vector2.all(32),
+          size: Vector2.all(raster),
           position: position,
-          life: 200,
-        ) {
-  }
+        );
 }

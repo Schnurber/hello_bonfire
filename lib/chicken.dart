@@ -54,7 +54,8 @@ Future<SpriteAnimation> runDown = SpriteAnimation.load(
   ),
 );
 
-class Chicken extends SimplePlayer with Sensor, Lighting, BlockMovementCollision  {
+class Chicken extends SimplePlayer with Sensor, Lighting, BlockMovementCollision {
+
   Chicken(Vector2 position)
       : super(
           animation: SimpleDirectionAnimation(
@@ -66,13 +67,7 @@ class Chicken extends SimplePlayer with Sensor, Lighting, BlockMovementCollision
           ),
           size: Vector2.all(32),
           position: position,
-          life: 200,
         ) {
-    //var ca = CollisionArea.rectangle(
-    //  size: Vector2.all(32),
-    //);
-   // setupSensorArea(areaSensor: [ca]);
-   // setupCollision(CollisionConfig(collisions: [ca],),);
     setupLighting(
             LightingConfig(
               radius: width * 1.5,
@@ -82,16 +77,4 @@ class Chicken extends SimplePlayer with Sensor, Lighting, BlockMovementCollision
           );
   }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-    //gameRef.camera.moveToTargetAnimated(target: this,zoom: 1.5 );
-  }
-
-  @override
-  void onContact(GameComponent component) {
-    if (component is Grain) {
-      component.opacity = 0;
-    }
-  }
 }
