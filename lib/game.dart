@@ -17,15 +17,15 @@ class ChickenTiledWidged extends BonfireWidget {
   ChickenTiledWidged({Key? key})
       : super(
           key: key,
-          joystick: Joystick(
+          playerControllers: [Joystick(
             directional: JoystickDirectional(),
-            keyboardConfig: KeyboardConfig(),
-            ),
+            //keyboardConfig: KeyboardConfig(),
+            ),], 
           cameraConfig: CameraConfig( 
             movementWindow: Vector2(100, 100),),
            lightingColorGame: Colors.black.withOpacity(0.75),
           map: WorldMapByTiled(
-            'tiled/maze.json',
+            WorldMapReader.fromAsset('tiled/maze.json'),
             forceTileSize: Vector2.all(32),
             objectsBuilder: {
               'enemy': (properties) => EnemyChicken(properties.position),
