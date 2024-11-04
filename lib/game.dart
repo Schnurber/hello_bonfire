@@ -20,10 +20,11 @@ class ChickenTiledWidged extends BonfireWidget {
           playerControllers: [Joystick(
             directional: JoystickDirectional(),
             //keyboardConfig: KeyboardConfig(),
-            ),], 
+            ),
+            ], 
           cameraConfig: CameraConfig( 
             movementWindow: Vector2(100, 100),),
-           lightingColorGame: Colors.black.withOpacity(0.75),
+           lightingColorGame: Colors.black.withAlpha(150),
           map: WorldMapByTiled(
             WorldMapReader.fromAsset('tiled/maze.json'),
             forceTileSize: Vector2.all(32),
