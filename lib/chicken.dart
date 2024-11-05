@@ -79,12 +79,10 @@ class Chicken extends SimplePlayer
         color: Colors.transparent,
       ),
     );
-
     setupPathFinding(
       pathLineColor: Colors.lightBlueAccent,
       barriersCalculatedColor: Colors.blue,
       pathLineStrokeWidth: 4,
-      useOnlyVisibleBarriers: true,
     );
   }
 
@@ -102,7 +100,7 @@ class Chicken extends SimplePlayer
   void onTapDownScreen(GestureEvent event) {
 
     var col = gameRef.collisions();
-    var clst = [for (var c in col) if (c.parent is Grain) c];
+    var clst = [for (var c in col) if (c.parent is Grain) c.parent as Grain];
     
     moveToPositionWithPathFinding(
       event.worldPosition,

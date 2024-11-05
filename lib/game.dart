@@ -23,6 +23,7 @@ class ChickenTiledWidged extends BonfireWidget {
             ),
             ], 
           cameraConfig: CameraConfig( 
+            zoom: 1.5,
             movementWindow: Vector2(100, 100),),
            lightingColorGame: Colors.black.withAlpha(150),
           map: WorldMapByTiled(

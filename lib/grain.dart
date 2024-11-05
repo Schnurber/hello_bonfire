@@ -1,15 +1,28 @@
 import 'package:bonfire/bonfire.dart';
+import 'package:flutter/material.dart';
 
 const raster = 32.0;
+int score = 0;
 
 class Grain extends GameDecoration with Sensor<Player> {
-
-    @override
+  @override
   void onContact(Player component) {
     removeFromParent();
+
+    Paint p = Paint();
+    p.color = Colors.amberAccent;
+    score++;
+    gameRef.map.add(
+      ParticleSystemComponent(
+        position: component.position + component.size / 2,
+        particle: CircleParticle(
+          paint: p,
+        ),
+      ),
+    );
+
     super.onContact(component);
   }
-
 
   Grain(Vector2 position)
       : super.withSprite(
