@@ -1,5 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:hello_bonfire/grain.dart';
 
 const raster = 32.0;
 
@@ -53,36 +54,60 @@ Future<SpriteAnimation> runDown = SpriteAnimation.load(
   ),
 );
 
-class Chicken extends SimplePlayer with Lighting, BlockMovementCollision {
- Vector2 initPosition;
+class Chicken extends SimplePlayer
+    with Lighting, BlockMovementCollision, PathFinding, TapGesture {
+  Vector2 initPosition;
 
   Chicken(Vector2 position)
-   : initPosition = position,
-    super(
-      animation: SimpleDirectionAnimation(
-        idleRight: idleRight,
-        runRight: runRight,
-        runLeft: runLeft,
-        runUp: runUp,
-        runDown: runDown,
+      : initPosition = position,
+        super(
+          animation: SimpleDirectionAnimation(
+            idleRight: idleRight,
+            runRight: runRight,
+            runLeft: runLeft,
+            runUp: runUp,
+            runDown: runDown,
+          ),
+          size: Vector2.all(32),
+          position: position,
+          speed: 200,
+        ) {
+    setupLighting(
+      LightingConfig(
+        radius: width * 1.5,
+        blurBorder: width * 1.5,
+        color: Colors.transparent,
       ),
-      size: Vector2.all(32),
-      position: position,
-      speed: 100,
-    ) {
-setupLighting(
-        LightingConfig(
-          radius: width * 1.5,
-          blurBorder: width * 1.5,
-          color: Colors.transparent,
-        ),
-      );
+    );
+
+    setupPathFinding(
+      pathLineColor: Colors.lightBlueAccent,
+      barriersCalculatedColor: Colors.blue,
+      pathLineStrokeWidth: 4,
+      useOnlyVisibleBarriers: true,
+    );
   }
 
-   @override
+  @override
   Future<void> onLoad() {
     /// Adds rectangle collision
     add(RectangleHitbox(size: size / 2, position: size / 4));
     return super.onLoad();
+  }
+
+  @override
+  void onTap() {}
+
+  @override
+  void onTapDownScreen(GestureEvent event) {
+
+    var col = gameRef.collisions();
+    var clst = [for (var c in col) if (c.parent is Grain) c];
+    
+    moveToPositionWithPathFinding(
+      event.worldPosition,
+      ignoreCollisions: clst,
+    );
+    super.onTapDownScreen(event);
   }
 }
