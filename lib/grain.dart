@@ -1,8 +1,10 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 const raster = 32.0;
 int score = 0;
+var scoreView = TextComponent(text: "Score: $score", position: Vector2(10, 10));
 
 class Grain extends GameDecoration with Sensor<Player> {
   @override
@@ -12,6 +14,9 @@ class Grain extends GameDecoration with Sensor<Player> {
     Paint p = Paint();
     p.color = Colors.amberAccent;
     score++;
+    localStorage.setItem('score', "$score");
+    scoreView.text = "Score: $score";
+
     gameRef.map.add(
       ParticleSystemComponent(
         position: component.position + component.size / 2,

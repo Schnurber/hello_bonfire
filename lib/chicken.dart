@@ -98,10 +98,12 @@ class Chicken extends SimplePlayer
 
   @override
   void onTapDownScreen(GestureEvent event) {
-
     var col = gameRef.collisions();
-    var clst = [for (var c in col) if (c.parent is Grain) c.parent as Grain];
-    
+    var clst = [
+      for (var c in col)
+        if (c.parent is Grain) c.parent as Grain
+    ];
+
     moveToPositionWithPathFinding(
       event.worldPosition,
       ignoreCollisions: clst,
