@@ -6,10 +6,11 @@ import 'grain.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initLocalStorage();
-  if (localStorage.getItem('score') == null) {
+  String? item = localStorage.getItem('score');
+  if (item == null) {
     localStorage.setItem('score', '0');
   } else {
-    String str = localStorage.getItem('score')!;
+    String str = item;
     score = int.parse(str);
   }
   
