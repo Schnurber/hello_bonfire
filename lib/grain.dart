@@ -1,22 +1,34 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
+import 'main.dart'; // Import StorageManager
 
+/// Size of the grain sprite in pixels
 const raster = 32.0;
+
+/// Global score variable tracking the player's current score
 int score = 0;
+
+/// Text component displaying the score in the game HUD
 var scoreView = TextComponent(text: "Score: $score", position: Vector2(10, 10));
 
+/// Represents a grain object in the game that the player can collect.
+/// When the player touches a grain, the score increases and the grain is removed.
 class Grain extends GameDecoration with Sensor<Player> {
   @override
   void onContact(Player component) {
+    // Remove the grain from the game
     removeFromParent();
 
+    // Create particle effect with amber color
     Paint p = Paint();
     p.color = Colors.amberAccent;
+    
+    // Increment score and persist to storage
     score++;
-    localStorage.setItem('score', "$score");
+    StorageManager().storage.setItem('score', "$score");
     scoreView.text = "Score: $score";
 
+    // Add visual particle effect at grain position
     gameRef.map.add(
       ParticleSystemComponent(
         position: component.position + component.size / 2,
@@ -29,6 +41,8 @@ class Grain extends GameDecoration with Sensor<Player> {
     super.onContact(component);
   }
 
+  /// Constructor for Grain object.
+  /// [position] The position in the game world where the grain appears.
   Grain(Vector2 position)
       : super.withSprite(
             sprite: Sprite.load('grain.png',
