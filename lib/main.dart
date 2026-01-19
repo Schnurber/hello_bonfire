@@ -3,6 +3,9 @@ import 'package:localstorage/localstorage.dart';
 import 'game.dart';
 import 'grain.dart';
 
+/// Background color used throughout the game
+const Color kGameBackgroundColor = Color(0xff004800);
+
 /// Singleton class to manage local storage operations for the app.
 /// This provides an instance-based solution instead of using global localStorage.
 class StorageManager {
@@ -55,8 +58,22 @@ void main() {
 
 /// Root widget of the application.
 /// Uses FutureBuilder to asynchronously load initial data before rendering the game.
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Store the future to prevent recreation on every rebuild
+  late final Future<int> _initializeFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFuture = StorageManager().initializeScore();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,12 +83,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
         brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xff004800),
+        scaffoldBackgroundColor: kGameBackgroundColor,
         useMaterial3: true,
       ),
       // Use FutureBuilder to initialize score before showing the game
       home: FutureBuilder<int>(
-        future: StorageManager().initializeScore(),
+        future: _initializeFuture,
         builder: (context, snapshot) {
           // Show loading indicator while initializing
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -92,10 +109,9 @@ class MyApp extends StatelessWidget {
           }
           
           // Data loaded successfully, set the score and show the game
-          if (snapshot.hasData) {
-            score = snapshot.data!;
-            scoreView.text = "Score: $score";
-          }
+          // Use fallback to 0 if data is somehow missing
+          score = snapshot.data ?? 0;
+          scoreView.text = "Score: $score";
           
           return const SimpleChickenGameWidget();
         },
