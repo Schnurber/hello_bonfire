@@ -1,6 +1,6 @@
 import 'package:bonfire/bonfire.dart';
 import 'package:flutter/material.dart';
-import 'main.dart'; // Import StorageManager
+import 'storage_manager.dart';
 
 /// Size of the grain sprite in pixels
 const raster = 32.0;

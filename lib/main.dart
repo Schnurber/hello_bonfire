@@ -1,53 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
 import 'game.dart';
 import 'grain.dart';
+import 'storage_manager.dart';
 
 /// Background color used throughout the game
 const Color kGameBackgroundColor = Color(0xff004800);
-
-/// Singleton class to manage local storage operations for the app.
-/// This provides an instance-based solution instead of using global localStorage.
-class StorageManager {
-  static final StorageManager _instance = StorageManager._internal();
-  LocalStorage? _storage;
-  
-  factory StorageManager() {
-    return _instance;
-  }
-  
-  StorageManager._internal();
-  
-  /// Returns the LocalStorage instance.
-  LocalStorage get storage {
-    _storage ??= localStorage;
-    return _storage!;
-  }
-  
-  /// Initializes the local storage and loads the saved score.
-  /// Returns the score value, defaulting to 0 if not found or invalid.
-  Future<int> initializeScore() async {
-    await initLocalStorage();
-    String? item = storage.getItem('score');
-    
-    if (item == null) {
-      // No score saved yet, initialize with 0
-      storage.setItem('score', '0');
-      return 0;
-    } else {
-      // Try to parse the saved score, handle errors gracefully
-      try {
-        int parsedScore = int.parse(item);
-        return parsedScore;
-      } catch (e) {
-        // If parsing fails (invalid data), reset to 0
-        debugPrint('Error parsing score from storage: $e. Resetting to 0.');
-        storage.setItem('score', '0');
-        return 0;
-      }
-    }
-  }
-}
 
 /// Entry point of the Flutter application.
 /// Initializes Flutter bindings and runs the app.
@@ -68,11 +25,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // Store the future to prevent recreation on every rebuild
   late final Future<int> _initializeFuture;
+  bool _scoreInitialized = false;
 
   @override
   void initState() {
     super.initState();
     _initializeFuture = StorageManager().initializeScore();
+  }
+  
+  /// Initialize the score once when data becomes available
+  void _initializeScore(int scoreValue) {
+    if (!_scoreInitialized) {
+      score = scoreValue;
+      scoreView.text = "Score: $score";
+      _scoreInitialized = true;
+    }
   }
 
   @override
@@ -110,8 +77,7 @@ class _MyAppState extends State<MyApp> {
           
           // Data loaded successfully, set the score and show the game
           // Use fallback to 0 if data is somehow missing
-          score = snapshot.data ?? 0;
-          scoreView.text = "Score: $score";
+          _initializeScore(snapshot.data ?? 0);
           
           return const SimpleChickenGameWidget();
         },
